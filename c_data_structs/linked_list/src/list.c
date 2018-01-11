@@ -67,9 +67,15 @@ int append(List *list, void *data) {
   Node *n = malloc(sizeof(Node));
   if (n != NULL) {
     set_node_data(n, data);
-    _set_prev_node(n, get_list_tail(list));
-    _set_next_node(n, NULL);
-    _set_next_node(get_list_tail(list), n);
+    if (is_empty(list)) {
+	_set_list_head(list, n);
+	_set_list_tail(list, n);
+    }
+    else {
+      _set_prev_node(n, get_list_tail(list));
+      _set_next_node(n, NULL);
+      _set_next_node(get_list_tail(list), n);
+    }
     list->size++;
     return 1;
   }
@@ -111,9 +117,10 @@ int _dequeue(List *list, Node *n) {
 int pop(List *list, void *data) {
   Node *n;
   if (_pop(list, n)) {
-    memcpy(get_node_data(n), data, sizeof(void *)); /* save data */
-    list->destroy(get_node_data(n)); /* free malloc-ed space */
-    free(n);
+    //memcpy(get_node_data(n), data, sizeof(void *)); /* save data */
+    //list->destroy(get_node_data(n)); /* free malloc-ed space */
+    //free(n);
+    data = get_node_data(n);
     return 1;
   }
   else {
@@ -124,9 +131,10 @@ int pop(List *list, void *data) {
 int dequeue(List *list, void *data) {
   Node *n;
   if (_dequeue(list, n)) {
-    memcpy(get_node_data(n), data, sizeof(void *));
-    list->destroy(get_node_data(n));
-    free(n);
+    //    memcpy(get_node_data(n), data, sizeof(void *));
+    //list->destroy(get_node_data(n));
+    //free(n);
+    data = get_node_data(n);
     return 1;
   }
   else {
