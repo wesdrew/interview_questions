@@ -3,7 +3,6 @@
 #include <stdio.h>
 
 int main(int argc, char **argv) {
-
   List test;
   list_init(&test, &free, NULL);
   assert(!is_empty(&test));	/* list should be empty! */
