@@ -1,20 +1,26 @@
 #include "../include/list.h"
-
+#include <stdio.h>
 
 int list_init(List *list, void (*destroy)(void *data),
 	      int (*match)(void *item_1, void *item_2)) {
-  Node *n;
-  list = malloc(sizeof(List));
-  n = malloc(sizeof(Node));
-  if (n != NULL && list != NULL) {
+  /*if ((list = malloc(sizeof(List)))) {
     list->size = 0;
-    list->head = n;
-    list->tail = n;
+    list->head = NULL;
+    list->tail = NULL;
     list->destroy = destroy;
     list->match   = match;
-    return 1; 			/* good to go! */
-  }
-  return 0;			/* a malloc failed! */
+    return 1;
+  } else {
+    return 0;
+    }*/
+  Node *n = malloc(sizeof(Node));
+  list->size = 0;
+  list->head = n;
+  list->tail = n;
+  n = NULL;
+  list->destroy = destroy;
+  list->match = match;
+  return 1;
 }
 
 /* getter methods */
@@ -55,7 +61,7 @@ void destroy_list(List *list){
 
 /* state methods */
 int is_empty(List *list) {
-  return _get_size(list) > 0 ? 1 : 0;
+  return _get_size(list) == 0 ? 1 : 0;
 }
 
 int _get_size(List *list) { 
@@ -65,17 +71,12 @@ int _get_size(List *list) {
 /* append! note - we should do type checking in future  */
 int append(List *list, void *data) {
   Node *n = malloc(sizeof(Node));
-  if (n != NULL) {
-    set_node_data(n, data);
-    if (is_empty(list)) {
-	_set_list_head(list, n);
-	_set_list_tail(list, n);
-    }
-    else {
-      _set_prev_node(n, get_list_tail(list));
-      _set_next_node(n, NULL);
-      _set_next_node(get_list_tail(list), n);
-    }
+  void *saved = malloc(sizeof(void *));
+  if (n != NULL && saved != NULL) {
+    saved = data;
+    set_node_data(n, saved);
+    _unlink_node(n);		/* just a precaution */
+    _append(list, n);
     list->size++;
     return 1;
   }
@@ -83,6 +84,20 @@ int append(List *list, void *data) {
     return 0;
   }
 }
+
+void _append(List *list, Node *node) {
+  if (is_empty(list)) {
+    _set_list_head(list, node);
+    _set_list_tail(list, node);
+  }
+  else {
+    _set_prev_node(node, get_list_tail(list));
+    _set_next_node(get_list_tail(list), node);
+    _set_list_tail(list, node);
+  }
+}
+
+
 
 /* removing data - helper methods */
 

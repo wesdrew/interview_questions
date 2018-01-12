@@ -14,8 +14,6 @@
 
   - makefile always recompiles...doesn't check if files are up to date
   - problem isn't with pop its with append
-  - problem with append fixed -> wasn't recording increase in size
-  - some bug in pop tho!
 
 
 1/10/18
