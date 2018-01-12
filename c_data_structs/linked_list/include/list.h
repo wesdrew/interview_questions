@@ -38,12 +38,12 @@ int append(List *list, void *data);
 void _append(List *list, Node *node);
 
 /* removing data */
-int pop(List *list, void *data);
-int dequeue(List *list, void *data);
+int pop(List *list, void **data);
+int dequeue(List *list, void **data);
 
 /* helper method for pop, dequeue */
-int _pop(List *list, Node *n);
-int _dequeue(List *list, Node *n);
+int _pop(List *list, Node **n);
+int _dequeue(List *list, Node **n);
 
 
 /* list destruction */

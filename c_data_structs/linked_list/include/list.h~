@@ -34,6 +34,9 @@ void _set_list_tail(List *list, Node *n);
 /* add data -- appends to end of list */
 int append(List *list, void *data);
 
+/* helper append method */
+void _append(List *list, Node *node);
+
 /* removing data */
 int pop(List *list, void *data);
 int dequeue(List *list, void *data);

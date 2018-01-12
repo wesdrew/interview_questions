@@ -5,7 +5,9 @@ BIN=./bin
 TEST_SRC=./test_src
 TEST_BIN=./test_bin
 EXEC=./exec
-
+ALL_DIRS= $(SRC) $(TEST_SRC) $(BIN) $(TEST_BIN) $(EXEC) $(INCLUDE)
+BIN_DIRS= $(BIN) $(TEST_BIN)
+SRC_DIRS= $(SRC) $(TEST_SRC)
 
 test: list_test node_test
 
@@ -27,9 +29,15 @@ list.o: $(SRC)/list.c $(INCLUDE)/list.h
 node.o: $(SRC)/node.c $(INCLUDE)/node.h
 	$(CC) -c $(SRC)/node.c -o $(BIN)/node.o
 
-.PHONY: clean
+.PHONY: clean mkdir
 
 clean:
+	for dir in $(BIN_DIRS) ; do \
+		rm $$dir/* ; \
+	done
 	rm $(EXEC)/*
-	rm $(BIN)/*
-	rm $(TEST_BIN)/*
+
+mkdir:
+	for dir in $(ALL_DIRS) ; do \
+		mkdir $$dir ; \
+	done
