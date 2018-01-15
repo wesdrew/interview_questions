@@ -33,7 +33,7 @@ class Lists:
 
     """
     def is_empty(self):
-        return True if self._size <= 0 else False
+        return True if self._size == 0 else False
 
     def get_head(self):
         return self._head
@@ -85,9 +85,9 @@ class Lists:
         if not self.is_empty():
             n = self._head
             self._head = n._next
-            self._head._prev = None
             self._size = self._size - 1
-            return n._unlink()
+            n._unlink()
+            return n
         else:
             return None
 
@@ -95,9 +95,9 @@ class Lists:
         if not self.is_empty():
             n = self._tail
             self._tail = n._prev
-            self._tail._next = None
             self._size = self._size - 1
-            return n._unlink()
+            n._unlink()
+            return n
         else:
             return None
 
@@ -175,10 +175,10 @@ class Lists:
         return string
 
     def __getitem__(self, k):
-        if index > self.get_size():
+        if k > self.get_size():
             raise IndexError
         else:
-            n = list._head
+            n = self._head
             while k is not 0:
                 n = n._next
                 k = k - 1                

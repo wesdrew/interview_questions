@@ -1,10 +1,10 @@
 
 def test(List, data):
-    print "\tTesting append..."
-    print "\t\tOur data == ",
-    print data
+    print "\tTesting append...",
     for item in data:
         List.append(item)
-    print "\t\tOur linked_list == ",
-    print List
+    for item in data:
+        if item != List.dequeue():
+            print "failed!"
+    print "passed!"
 

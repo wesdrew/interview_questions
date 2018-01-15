@@ -3,8 +3,8 @@
 def test(List):
     print "\tTesting is_empty...",
     if List.is_empty() == False:
-        print "failed!\n"
+        print "failed!"
     else:
-        print "passed!\n"
+        print "passed!"
 
 
