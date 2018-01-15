@@ -1,5 +1,8 @@
 # Linked List data structure
 
+from Nodes import Nodes
+
+
 class Lists:
 
     def __init__(self):
@@ -24,9 +27,13 @@ class Lists:
 
     append -> add data to end of the list
 
+    pop -> return and remove data from end of list
+
+    dequeue -> return and remove data from front of list
+
     """
     def is_empty(self):
-        return True if self._size > 0 else False
+        return True if self._size <= 0 else False
 
     def get_head(self):
         return self._head
@@ -38,12 +45,24 @@ class Lists:
         return self._size
 
     def append(self, data):
-        n = Node(data)
+        n = Nodes.Nodes(data)
         self._append(n)
 
+    def add_to_head(self, data):
+        n = Nodes.Nodes(data);
+        self._add_to_head(n)
+
     def get_item(self, k):
-        n = self.__getitem(k)
-        return n.get_data()
+        n = self.__getitem__(k)
+        return n._data
+
+    def pop(self):
+        n = self._remove_from_tail()
+        return n._data
+
+    def dequeue(self):
+        n = self._remove_from_head()
+        return n._data
 
     """
 
@@ -55,58 +74,63 @@ class Lists:
     _remove_from_tail -> remove and return the item at the 
                         tail of the list
 
-    _set_head -> set head reference to point to new node
-
-    _set_tail -> set tail reference to point to new node
-
-    _add_to_front -> add a new node to the front of the list
+    _add_to_head -> add a new node to the front of the list
 
     _append -> add a new node to the end of the list
 
 
     """
-
-
     
     def _remove_from_head(self):
         if not self.is_empty():
-            n = self.get_head()
-            self._set_head(n.get_next())
+            n = self._head
+            self._head = n._next
+            self._head._prev = None
+            self._size = self._size - 1
             return n._unlink()
         else:
             return None
+
     def _remove_from_tail(self):
         if not self.is_empty():
-            n = self.get_tail()
-            self._set_tail(n.get_prev())
+            n = self._tail
+            self._tail = n._prev
+            self._tail._next = None
+            self._size = self._size - 1
             return n._unlink()
         else:
             return None
 
-    def _set_head(self, node):
-        self._head = node
-
-    def _set_tail(self, node):
-        self._tail = node
-
     def _append(self, node):
-        if is_empty(self):
-            self._set_head(node)
-            self._set_tail(node)
+        if self.is_empty():
+            self._head = node
+            self._tail = node
         else:
-            node._set_prev(self._tail)
-            node._set_next(None)
-            self._set_tail(node)
+            node._prev = self._tail
+            node._next = None 
+            self._tail._next = node
+            self._tail = node
+        self._size = self._size + 1
 
-    def _add_to_front(self, node):
-        if is_empty(self):
-            self._set_head(node)
-            self._set_tail(node)
+    def _add_to_head(self, node):
+        if self.is_empty():
+            self._head = node 
+            self._tail = node
         else:
-            node._set_next(self.get_head())
-            node._set_prev(None)
-            self._set_head(node)
+            node._next = self._head
+            node._prev = None
+            self._head._prev = node
+            self._head = node
+        self._size = self._size + 1
 
+    # create deep copy of our list
+    def _copy(self):
+        copy = Lists()
+        n = self._head
+        while n is not None:
+            copy.append(n.get_data())
+            n = n._next
+        return copy
 
 
     """
@@ -124,40 +148,71 @@ class Lists:
 
     """
 
-
-
     def __iter__(self):
-        return_list = Lists()
-        if not self.is_empty():
-            node = self.get_head()
-            while node is not None:
-                return_list._append(node)
-                node = node.get_next()
-        return return_list
+        copy = self._copy()
+        return LinkedListIterator(copy)
 
     def __reversed__(self):
-        return_list = Lists()
-        if not self.is_empty():
-            node = self.get_tail()
-            while node is not None:
-                return_list._append(node)
-                node = node.get_prev()
-        return return_list
+        copy = self._copy()
+        return ReversedLinkedListIterator(copy)
 
     def __str__(self):
-        print "\'["
-        for item in self:
-            print item + ", "
-        print "]\'\n"
+        str = "["
+        to_print = self._head
+        if self._size > 5:
+            str = self._build_string(str, to_print, 5)
+            str += "... "
+        else:
+            str = self._build_string(str, to_print, self._size - 1)
+        str += "'" + self._tail.__str__() + "']\n"
+        return str
+        
+            
+    def _build_string(self, string, node, k):
+        for i in range(0, k):
+            string += "'" + node.__str__() + "', "
+            node = node._next
+        return string
 
     def __getitem__(self, k):
         if index > self.get_size():
             raise IndexError
         else:
-            n = list.get_head()
+            n = list._head
             while k is not 0:
-                n = n.get_next()
+                n = n._next
                 k = k - 1                
             return n
 
     
+class LinkedListIterator:
+        
+    def __init__(self, copy):
+        self._current = copy._head
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self._current is None:
+            raise StopIteration
+        else:
+            n = self._current
+            self._current = n._next
+            return n.get_data()
+
+class ReversedLinkedListIterator:
+
+    def __init__(self, copy):
+        self._current = copy._tail
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self._current == None:
+            raise StopIteration
+        else: 
+            n = self._current
+            self._current = n._prev
+            return n.get_data()
