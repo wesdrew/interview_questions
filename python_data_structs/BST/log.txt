@@ -1,0 +1,4 @@
+1.16.18:
+
+	- a node's data was originally represented using dicts but changing that to
+	  tuples because that seems less wasteful
