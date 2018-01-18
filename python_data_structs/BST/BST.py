@@ -199,7 +199,7 @@ class BST:
         if self._left and self._right: # both children exist
             successor = self._right._min() # get the minimum key, value in tree    
             self._root = successor
-            self._right = self._delete(successor._get_key())
+            self._delete(successor._get_key())
         elif self._left:        # only left child exists
             self = self._left
         elif self._right:       # only right child exists
