@@ -49,10 +49,6 @@ class BST:
 #
 #    is_empty(): return True if size == 0 else False
 #
-#    _resize(): calculate the size of the whole tree by recursively 
-#    calculating the size of the left and right tree and adding the 
-#    root node
-#
 #
 #
 ###################################################################
@@ -64,18 +60,6 @@ class BST:
     def is_empty(self):
         return True if self._size == 0 else False
 
-    def _resize(self):
-        new_size = 0
-        if self._left:          # if the left tree exists, calculate its size
-            self._left._resize()
-            new_size += self._left.size()
-        if self._right:         # same for right tree
-            self._right._resize()
-            new_size += self.size()
-        if self._root:          # edge case: user might call _resize on empty BST
-            new_size += 1
-        self._size = new_size
-        
 
 ##################################################################
 #
@@ -99,8 +83,8 @@ class BST:
             return None
    
     def _get(self, key):
-        if key == self._root.get_key():
-            return self._root.get_value()
+        if key == self._root._get_key():
+            return self._root._get_value()
         else:
             if key < self._root:
                 return self._left._get(key)
@@ -114,9 +98,9 @@ class BST:
 #    Addition methods
 #
 #    add(key, value): creates a Node for key/value pair and calls
-#    _add(root, node) to place and create the subtree. Calls _resize 
-#    to recalculate sizes of all subtrees 
-# 
+#    _add(root, node) to place and create the subtree. increment
+#    size after insertion 
+#
 #    Edge cases: 
 #    if contains(key) evaluates to True:
 #    1. if value == None, trigger a remove operation 
@@ -139,7 +123,7 @@ class BST:
         else:
             node = Nodes(key, value)
             self._add(node)
-            self._resize()
+            self._size += 1
 
     def _add(self, node):
         if self._root:          # is this node already populated?
@@ -166,7 +150,7 @@ class BST:
 
     def contains(self, key):
         if self._root:          # does this BST exist?
-            root_key = self._root.get_key()
+            root_key = self._root._get_key()
             if key < root_key:
                 if self._left:
                     return self._left.contains(key)
@@ -190,48 +174,52 @@ class BST:
 #    remove(key): call _remove to prune tree and then _resize()
 #    tree
 #
-#    _remove(key): if key is found in the tree, find the sub_root where 
-#    key is stored. Promote the left sub_tree if it exists and then 
-#    place the right subtree within the left sub_tree. If the left does
-#    not exist, promote the right subtree
+#    _remove(key): if key is found in the tree:
+#                    1st case: no children --> destroy the node
+#                    2nd: 1 child -> promote the child to take place
+#                         of the node
+#                    3rd: both children exist: so search the right sub
+#                         tree for a successor node, overwrite the to 
+#                         be deleted node. Then delete the successor node
+#
+#    _min(tree): return the minimum value in a BST 
+#
+#    _delete(node): redefine node to be None
+#
 #
 #
 #################################################################
 
     def remove(self, key):
-        if self.contains(key):  # only remove if key is already in tree 
+        if self.contains(key):
             self._remove(key)
-            self._resize()
+            self._size = self._size - 1
 
-    # replacing using sub-tree not working 
-    def _remove(self, tree, key):
-        root_key = tree._root.get_key()
-        if key == root_key:
-            if tree._left:  # does left tree exist?
-                right = tree._right # save reference to right tree
-                tree._left._place(self._left, right) # place right subtree in left subtree
-                tree = tree._left
-            elif tree._right: # left tree didn't exist, promote right subtree
-                tree = self._right # just promote right subtree
-            else:
-                tree._root = None
-        elif key < root_key:
-            tree._left._remove(tree._left, key) # we know left subtree exists
+    def _remove(self, key):
+        if self._left and self._right: # both children exist
+            successor = self._right._min() # get the minimum key, value in tree    
+            self._root = successor
+            self._right = self._delete(successor._get_key())
+        elif self._left:        # only left child exists
+            self = self._left
+        elif self._right:       # only right child exists
+            self = self._right
         else:
-            tree._right._remove(tree._right, key) # we know right subtree exists
+            self._root = None
 
-    def _place(self, tree, sub_tree):
-        if sub_tree:            # only place subtree exists
-            root_key = tree._root.get_key()
-            sub_key = sub_tree._root.get_key()
-            if sub_key < root_key:
-                if tree._left:
-                    tree._left._place(tree._left, sub_tree)
-                else:
-                    tree._left = sub_tree
-            if sub_key > root_key:
-                if tree._right:
-                    tree._right._place(tree._right, sub_tree)
-                else:
-                    tree._right = sub_tree
+    def _min(self):
+        if self._left:
+            return self._left._min() # there is still lesser values
+        return self._root # there is no left tree, so this must be the min
+
+    def _delete(self, key):     # this will travel to a leaf and assign it to None
+        node = self._right
+        while node:
+            node_key = node._root._get_key()
+            if key == node_key:
+                node = None               
+            elif key < node_key:
+                node = node._left
+            elif key > node_key:
+                node = node._right
 

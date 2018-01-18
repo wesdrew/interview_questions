@@ -1,3 +1,13 @@
+1.18.18
+          
+    ok changing the removal algorithm to the find the minimum in the right subtree
+    and swapping it with the node to remove ( if have 2 children) or just promoting 
+    the single child 
+
+    - ugh now size is broken and remove is still not working
+    - ok size is much dumber now and delete is too. 
+
+
 1.17.18
 
 	- suspect that my implementation is not set up correctly 

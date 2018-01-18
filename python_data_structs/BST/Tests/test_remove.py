@@ -3,26 +3,19 @@ def test(BST):
    
     print "\tTesting remove...",
     flag = True
-    BST.add("test", 5)
-    BST.add("A", 4)
-    BST.add("DD", 1000)
-    BST.add("CCC", 50)
-    print BST.size()
-    print BST._root
-    print BST._left._root
-    print BST._left._right._root
-    print BST._left._right._left._root
-    BST.remove("test")
-    print BST._root
-"""
-    BST.remove("test")
-    if BST.contains("test"):
+    BST.add(10, 5)
+    BST.add(3, 4)
+    BST.add(100, 1000)
+    BST.add(1, 50)
+    BST.add(4, 60)
+    BST.remove(10)
+    if BST.contains(10):
         flag = False
     BST.contains("test")    # test that this will not cause error
-    if BST.size() != 3:
+    if BST.size() != 4:
         flag = False
     if flag:
         print "passed!"
     else:
         print "failed!"
-"""
+

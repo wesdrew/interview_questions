@@ -129,14 +129,11 @@ class MinPQ:
         else:
             self._sink_with_1_child(index, right_index)
 
-
     def _sink_with_1_child(self, index, child_index):
         if self._less(self._queue[child_index], self._queue[index]):
             self._swap(index, child_index)
             return self._sink(child_index) # do we have to sink further?
         return None                  # item has found correct place in MinPQ 
-
-
     
     def _sink_with_2_children(self, index, left_index, right_index):
         to_compare = left_index if self._less(self._queue[left_index], self._queue[right_index]) \

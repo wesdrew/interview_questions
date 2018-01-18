@@ -5,7 +5,7 @@ from Tests import test_remove
 from BST import BST as BST
 
 print "Testing BST methods..."
-#test_contains.test(BST())
-#test_add.test(BST())
-#test_size.test(BST())
+test_contains.test(BST())
+test_add.test(BST())
+test_size.test(BST())
 test_remove.test(BST())

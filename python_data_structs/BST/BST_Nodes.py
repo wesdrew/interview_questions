@@ -26,28 +26,17 @@ class BST_Nodes:
 #
 ####################################################
 
-    def get_key(self):
+    def _get_key(self):
         return self._data[0]
 
-    def get_value(self):
+    def _get_value(self):
         return self._data[1]
 
-    def set_value(self, new_value):
+    def _set_value(self, new_value):
         self._data = (self._data[0], new_value)
         return None
 
-    def get_size(self):
-        return self._size
-
-    def _resize(self):
-        new_size = 0
-        if self._left_tree is not None:
-            new_size += self._left_tree._resize()
-        if self._right_tree is not None:
-            new_size += self._right_tree._resize()
-        self._size = 1 + new_size
-        
-
+ 
 ################################################################
 #
 # Overwritten comparison methods compare on the key 
