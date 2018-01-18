@@ -8,9 +8,7 @@ class BST_Nodes:
     
     def __init__(self, key, value):
         self._data = (key, value)
-        self._size = 1          # size of this tree/subtree
-        self._left_tree = None
-        self._right_tree = None
+
 
 ####################################################
 #

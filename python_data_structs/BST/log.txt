@@ -1,3 +1,23 @@
+1.17.18
+
+	- suspect that my implementation is not set up correctly 
+	    - 1. recursive calls may not be called by the correct caller
+	       so not delegating tasks to subtrees, responsibilities for
+	       populating the tree are garbled
+
+	- renamed _head to _root and generally made references in functions clearer at 
+	  the expense of more lines of code
+	- missed case in _remove where a subtree might have no right or left subtrees
+	- having trouble adding more than one value to the tree, None is being assigned
+	  to self._root when recursive calls unwind
+
+	- now at frustration point where I tear it down and start again
+
+	- removing left, right pointers from BST_Node and putting them in the BST
+
+        - found problem with remove...it's not removing the head node!
+
+
 1.16.18:
 
 	- a node's data was originally represented using dicts but changing that to
