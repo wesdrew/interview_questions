@@ -41,17 +41,18 @@ class BST:
             self._size = 1      # if created at a leaf, size of subtree is necessarily 1
 
 
-#####################################################################
-#
-#    size methods 
-#
-#    size(): return current size of tree
-#
-#    is_empty(): return True if size == 0 else False
-#
-#
-#
-###################################################################
+
+
+    ###################################################
+    # size methods                                    #
+    #                                                 #
+    # size(): return current size of tree             #
+    #                                                 #
+    # is_empty(): return True if size == 0 else False #
+    ###################################################
+
+
+
 
 
     def size(self):
@@ -61,19 +62,21 @@ class BST:
         return True if self._size == 0 else False
 
 
-##################################################################
-#
-#    get methods
-#                                           
-#    get: calls _get to traverse the tree and return value at correct
-#        sub-root
-#                                                        
-#    _get: visits as many subroots as necessary to find matching key. 
-#          returns value associated with key. 
-#          
-#                                                               
-#                                                               
-##################################################################
+
+
+    #####################################################################
+    # get methods                                                       #
+    #                                                                   #
+    # get: calls _get to traverse the tree and return value at correct  #
+    #     sub-root                                                      #
+    #                                                                   #
+    # _get: visits as many subroots as necessary to find matching key.  #
+    #       returns value associated with key.                          #
+    #####################################################################
+          
+                                                               
+                                                               
+
 
 
     def get(self, key):
@@ -93,25 +96,27 @@ class BST:
 
     
             
-################################################################
-#
-#    Addition methods
-#
-#    add(key, value): creates a Node for key/value pair and calls
-#    _add(root, node) to place and create the subtree. increment
-#    size after insertion 
-#
-#    Edge cases: 
-#    if contains(key) evaluates to True:
-#    1. if value == None, trigger a remove operation 
-#    2. otherwise, reset the key, value pair in the tree
-#
-#
-#    _add(sub_root, node): traverse a sub-tree to find an appropriate
-#    leaf node (ie. - a None reference). Create a subtree at that leaf 
-#
-#    
-#################################################################
+
+
+    ######################################################################
+    # Addition methods                                                   #
+    #                                                                    #
+    # add(key, value): creates a Node for key/value pair and calls       #
+    # _add(root, node) to place and create the subtree. increment        #
+    # size after insertion                                               #
+    #                                                                    #
+    # Edge cases:                                                        #
+    # if contains(key) evaluates to True:                                #
+    # 1. if value == None, trigger a remove operation                    #
+    # 2. otherwise, reset the key, value pair in the tree                #
+    #                                                                    #
+    #                                                                    #
+    # _add(sub_root, node): traverse a sub-tree to find an appropriate   #
+    # leaf node (ie. - a None reference). Create a subtree at that leaf  #
+    ######################################################################
+
+    
+
 
 
     def add(self, key, value):
@@ -140,13 +145,15 @@ class BST:
         else:                   # this leaf is None
             self._root = node   # not sure if this is correct
 
-##################################################################
-#
-#    contains(key): traverse the tree until a None node is reached or 
-#    a Node containing key is found
-#
-#
-#################################################################
+
+
+    #####################################################################
+    # contains(key): traverse the tree until a None node is reached or  #
+    # a Node containing key is found                                    #
+    #####################################################################
+
+
+
 
     def contains(self, key):
         if self._root:          # does this BST exist?
@@ -167,28 +174,27 @@ class BST:
             return False        # edge case: tree is empty
 
     
-################################################################
-#
-#    remove methods
-#
-#    remove(key): call _remove to prune tree and then _resize()
-#    tree
-#
-#    _remove(key): if key is found in the tree:
-#                    1st case: no children --> destroy the node
-#                    2nd: 1 child -> promote the child to take place
-#                         of the node
-#                    3rd: both children exist: so search the right sub
-#                         tree for a successor node, overwrite the to 
-#                         be deleted node. Then delete the successor node
-#
-#    _min(tree): return the minimum value in a BST 
-#
-#    _delete(node): redefine node to be None
-#
-#
-#
-#################################################################
+
+
+    ########################################################################
+    # remove methods                                                       #
+    #                                                                      #
+    # remove(key): call _remove to prune tree and then _resize()           #
+    # tree                                                                 #
+    #                                                                      #
+    # _remove(key): if key is found in the tree:                           #
+    #                 1st case: no children --> destroy the node           #
+    #                 2nd: 1 child -> promote the child to take place      #
+    #                      of the node                                     #
+    #                 3rd: both children exist: so search the right sub    #
+    #                      tree for a successor node, overwrite the to     #
+    #                      be deleted node. Then delete the successor node #
+    #                                                                      #
+    # _min(tree): return the minimum value in a BST                        #
+    #                                                                      #
+    # _delete(node): redefine node to be None                              #
+    ########################################################################
+
 
     def remove(self, key):
         if self.contains(key):
@@ -223,3 +229,48 @@ class BST:
             elif key > node_key:
                 node = node._right
 
+
+    
+    ###################################################################################
+    # iterable methods:                                                               #
+    #                                                                                 #
+    #     get_keys: return all of the keys in the BST in the order nodes are visited  #
+    #     in a breadth first search                                                   #
+    #                                                                                 #
+    #     get_values: return all of the values in the BST in the order node are       #
+    #     visited in a breadth first search                                           #
+    #                                                                                 #
+    #     _get_root_attr: helper func for get_keys, get_values. Uses lambda function  #
+    #     to extract either key or value from node_root                               #
+    #                                                                                 #
+    #     __iter__: return all of the key,value pairs in the BST in the order nodes   #
+    #     are visited in a breadth first search                                       #
+    ###################################################################################
+    
+    def get_keys(self):
+        extract_key = lambda root: root._get_key()
+        return self._get_root_attr(extract_key)
+
+    def get_values(self):
+        extract_val = lambda root: root._get_value()
+        return self._get_root_attr(extract_val)
+
+    def __iter__(self):
+        extract_nodes = lambda root: root._data # return key,value tuples
+        return iter(self._get_root_attr(extract_nodes))
+
+
+    # func is lambda function passed from get_values or get_keys
+    def _get_root_attr(self, func):
+        ret_queue = list()
+        if self.size():         # don't want to append None to node_queue, so check size
+            node_queue = list()
+            node_queue.append(self)
+            while node_queue:   # there are still nodes to process
+                visited = node_queue.pop(0) # remove head
+                if visited._left:
+                    node_queue.append(visited._left)
+                if visited._right:
+                    node_queue.append(visited._right)
+                ret_queue.append(func(visited._root))
+        return ret_queue

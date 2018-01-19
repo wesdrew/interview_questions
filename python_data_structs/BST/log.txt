@@ -1,3 +1,8 @@
+1.19.18
+
+    implementing __iter__, get_keys, and get_values methods
+
+
 1.18.18
           
     ok changing the removal algorithm to the find the minimum in the right subtree

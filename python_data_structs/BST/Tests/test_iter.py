@@ -6,13 +6,16 @@ def test(BST):
     BST.add("C", 3)
     BST.add("A", 6)
     BST.add("Z", 10)
-    print "\tTesting get_keys...",
-    l = BST.get_keys()
-    if l[0] != "C" or l[1] != "A" \
-            or l[2] != "Z":
-        flag = False
+    print "\tTesting __iter__...",
+    i = iter(BST)
+    if next(i) != ("C", 3):
+        flag == False
+    if next(i) != ("A", 6):
+        flag == False
+    if next(i) != ("Z", 10):
+        flag == False
     if flag:
         print "passed!"
     else:
         print "failed!"
-
+    i2 = iter(BST)
