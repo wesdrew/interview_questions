@@ -1,0 +1,1 @@
+a simple graph representation using adjacency lists. Graphs constructed using simple txt files where each line represents: (node n) (adjacent nodes)

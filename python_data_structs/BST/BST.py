@@ -11,7 +11,7 @@ understand.
 _root : BST_Node stored at this particular tree leaf
 _left: reference to left sub_tree
 _right: reference to right sub_tree
-_size: size of left sub_tree + right_subtree + 1
+_size: number of elements in tree
 
 @public methods
 
