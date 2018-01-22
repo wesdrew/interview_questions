@@ -119,7 +119,7 @@ class Graphs:
     #                                                            #
     #     get_edges(): return a list of tuples representing all  #
     #                  edges in the graph                        #
-    #     connected(n_1, n_2): return True if an edge connects   #
+    #     have_edge(n_1, n_2): return True if an edge connects   #
     #     n_1 and n_2                                            #
     ##############################################################
 
@@ -135,7 +135,7 @@ class Graphs:
                 copy[n_2].remove(n_1)       # don't double count
         return edge_list
 
-    def connected(self, n_1, n_2):
+    def have_edge(self, n_1, n_2):
         return n_2 in self._nodes[n_1]
 
     def __str__(self):
