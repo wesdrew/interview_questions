@@ -1,0 +1,1 @@
+Given a set,S of n , of  distinct integers, print the size of a maximal subset,S' , of  where the sum of any  numbers in  is not evenly divisible by k
