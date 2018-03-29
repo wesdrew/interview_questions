@@ -1,17 +1,26 @@
+from LightSwitch import LightSwitch
+import logging
 import threading
 
+MALE = 1
+FEMALE = 0
 
 
 class Bathroom:
 
     def __init__(self):
-        """
-        A wrapper for a lock that is passed to 
-        conditional variables.
+        self.male_switch = LightSwitch()
+        self.female_switch = LightSwitch()
 
-        count is used to switch between females and males
-        """
-        self.lock = threading.RLock()
-        self.count = 0
+    def enter(self, sex,  cv):
+        if sex == MALE:
+            self.female_switch.inc(cv)
+        elif sex == FEMALE:
+            self.male_switch.inc(cv)
 
+    def leave(self, sex, cv):
+        if sex == MALE:
+            self.female_switch.dec(cv)
+        elif sex == FEMALE:
+            self.male_switch.dec(cv)
 
