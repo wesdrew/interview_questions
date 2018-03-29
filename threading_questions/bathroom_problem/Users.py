@@ -1,56 +1,46 @@
-import threading
 import logging
+import threading
 
-class User:
+"""
+
+Male and Female users of the bathroom.
+
+
+"""
+
+class User(object):
     
-    def __init__(self, same_sex_cv, opp_sex_cv):
-        self.same_sex_cv = same_sex_cv
-        self.opp_sex_cv = opp_sex_cv
+    def __init__(self, cv, sex, line_full_event):
+        self.cv = cv
+        self.sex = sex
+        self.line_full_event = line_full_event
 
-    def enter_bathroom(self, bathroom, debug_message):
-        with bathroom.lock:
-            self.same_sex_cv.notify_all()
-            bathroom.count = bathroom.count + 1
-            logging.debug(debug_message +  " count: %d", bathroom.count)
+    def enter_bathroom(self, bathroom):
+        with self.cv:
+            bathroom.enter(self.sex, self.cv)
 
-    def leave_bathroom(self, bathroom, debug_message):
-        with bathroom.lock:
-            bathroom.count = bathroom.count - 1
-            logging.debug(debug_message + " count: %d", bathroom.count)
-            self.opp_sex_cv.notify_all()
+    def leave_bathroom(self, bathroom):
+        bathroom.leave(self.sex, self.cv)
 
 
 class Male(User):
     
-    def __init__(self, same_sex_cv, opp_sex_cv):
-        super(Male, self).__init__(same_sex_cv, opp_sex_cv)
+    def __init__(self, cv, sex, line_full_event):
+        super(Male, self).__init__(cv, sex, line_full_event)
 
-    def enter_bathroom(self, bathroom, debug_message="Man entering bathroom"):
-        super(Male,self).enter_bathroom(bathroom, debug_message)
-
-    def leave_bathroom(self, bathroom, debug_message="Man leaving bathroom"):
-        super(Male, self).leave_bathroom(bathroom, debug_message)
- 
+    def go(self, bathroom):
+        logging.debug("Male queueing up")
+        self.line_full_event.wait()
+        super(Male, self).enter_bathroom(bathroom)
+        super(Male, self).leave_bathroom(bathroom)
         
-    def run(self, bathroom):
-        logging.debug("Male queueing")
-        self.enter_bathroom(bathroom)
-        self.leave_bathroom(bathroom)
-
 class Female(User):
+    def __init__(self, cv, sex, line_full_event):
+        super(Female, self).__init__(cv, sex, line_full_event)
 
-    def __init__(self, same_sex_cv, opp_sex_cv):
-        super(Female, self).__init__(same_sex_cv, opp_sex_cv)
+    def go(self, bathroom):
+        logging.debug("Female queueing up")
+        self.line_full_event.wait()
+        super(Female, self).enter_bathroom(bathroom)
+        super(Female, self).leave_bathroom(bathroom)
 
-    def enter_bathroom(self, bathroom, debug_message="Female entering bathroom"):
-        super(Female, self).enter_bathroom(bathroom, debug_message)
-
-
-    def leave_bathroom(self, bathroom, debug_message="Female leaving bathroom"):
-        super(Female, self).enter_bathroom(bathroom, debug_message)
-
-
-    def run(self, bathroom):
-        logging.debug("Female queueing")
-        self.enter_bathroom(bathroom)
-        self.leave_bathroom(bathroom)

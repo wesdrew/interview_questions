@@ -1,35 +1,44 @@
 from Bathroom import Bathroom
+from Users import Male, Female
 import logging
 import random
 import threading
-from Users import Male, Female
 
-MALE = 1
-FEMALE = 0
 
+""""
+
+Create 10 threads of Users, randomly assigned male or female,
+and have them attempt to use the bathroom. If implemented correctly,
+the opposite sexes should not use the bathroom at the same time
+
+"""
+
+MALE=1
+FEMALE=0
 
 
 def Main():
-    logging.basicConfig(format='%(threadName)s:%(message)s', level=logging.DEBUG)
+    logging.basicConfig(format='%(threadName)s, %(asctime)s, %(message)s', datefmt='%M:%S', level=logging.DEBUG)
+    # create Bathroom
     b = Bathroom()
-    logging.debug("Bathroom created!")
-    ready_for_men, ready_for_women = get_condition_variables(b)
-    for i in range(0, 2):
-        user= Male(ready_for_men, ready_for_women)
-        threading.Thread(target=user.run, args=(b,)).start()
-    for i in range(0, 10):
-        if random.randint(0, 1) == MALE:
-            user = Male(ready_for_men, ready_for_women)
+    # create whatever threading objects we need
+    males_can_enter, females_can_enter = get_cvs()
+    line_full = threading.Event()
+    for i in range(10):
+        if random.randint(0,1) == MALE:
+            # create Male user
+            user =  Male(males_can_enter, MALE, line_full)
         else:
-            user = Female(ready_for_women, ready_for_men)
-        t = threading.Thread(target=user.run, args=(b,))
+            # create Female user
+            user = Female(females_can_enter, FEMALE, line_full)
+        t = threading.Thread(target=user.go, args=(b,))
         t.start()
+    logging.debug("we're off to the races!")
+    line_full.set() 
 
-def get_condition_variables(bathroom):
-    return (threading.Condition(bathroom.lock),
-            threading.Condition(bathroom.lock))
-
-
-if __name__ == "__main__":
-    Main()
+def get_cvs():
+    return (threading.Condition(), threading.Condition())
     
+
+if __name__ == '__main__':
+    Main()
